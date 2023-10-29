@@ -1,12 +1,9 @@
 <?php
 
-use App\Models\Employee;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-use function Laravel\Prompts\search;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,33 +16,10 @@ use function Laravel\Prompts\search;
 |
 */
 
-Route::get('/', function (Request $request) {
-    $selectedDate = $request->query('date')
-        ? Carbon::parse($request->input('date'))
-        : Carbon::now();
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-    $weekNumber = $selectedDate->weekOfYear;
-    $weekStartDate = $selectedDate->startOfWeek()->format('d/m');
-    $weekEndDate = $selectedDate->endOfWeek()->format('d/m');
+Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
 
-    $data = [
-        'weekNumber' => $weekNumber,
-        'startDate' => $weekStartDate,
-        'endDate' => $weekEndDate,
-    ];
-
-    if ($request->query('date')) {
-        $data['filters'] = ['date' => $request->query('date')];
-    }
-
-    return Inertia::render('Home', ['data' => $data]);
-})->name('home');
-
-Route::post('/employees', function (Request $request) {
-    $attributes = $request->validate([
-        'firstname' => 'required|string|min:2|max:30',
-        'lastname' => 'required|string|min:2|max:30'
-    ]);
-
-    Employee::create($attributes);
-});
+Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('task.destroy');

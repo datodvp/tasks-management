@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Employee extends Model
+class Task extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $guarded = [];
 
-    public function tasks()
+    public function week()
     {
-        return $this->hasMany(Task::class, 'employee_id');
+        return $this->belongsTo(Week::class, 'week_id');
     }
 }
