@@ -15,7 +15,6 @@ class HomeController extends Controller
             ? Carbon::parse($request->input('selected_date'))
             : Carbon::now();
 
-        // dd($selectedEmployee);
         $weekNumber = $selectedDate->weekOfYear;
         $weekStartDate = $selectedDate->copy()->startOfWeek()->format('d/m');
         $weekEndDate = $selectedDate->copy()->endOfWeek()->format('d/m');
